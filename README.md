@@ -1,5 +1,14 @@
 # Soket Programlama Simülasyonu (Full-Stack Python & Web)
 
+> 🌐 **Kurmadan önce denemek ister misiniz?**
+> Bu projenin **tarayıcıda çalışan web versiyonu** GitHub Pages üzerinde yayında!
+> Hiçbir kurulum gerektirmeden simülasyonu deneyimleyebilirsiniz:
+> **👉 [https://ilhandemirel.github.io/socket-programming-web-simulation/](https://ilhandemirel.github.io/socket-programming-web-simulation/)**
+>
+> *(Not: Web versiyonu animasyon ve görselleştirme odaklıdır. Gerçek OS soketi açma ve `netstat` ile ağ trafiğini kanıtlama özelliği yalnızca bu Full-Stack Python versiyonunda mevcuttur.)*
+
+---
+
 Ağ sistemlerinin çekirdeğini (TCP/IP) öğrenmenin en görsel ve sağlam yollarından biri! Bu proje, ağ (Networking) alanındaki tüm temel operasyonları `socket()`, `bind()`, `listen()`, `accept()`, `connect()`, `recv()`, `send()` adım adım inceleyebileceğiniz **gerçek zamanlı (Real-time) ve akademik düzeyde bir tam-teşekküllü (Full-Stack) OS Simülasyonudur.**
 
 ## ✨ Projenin Öne Çıkan Özellikleri
