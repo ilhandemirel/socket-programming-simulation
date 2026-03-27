@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soket Programlama Simülasyonu</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ambient-background"></div>
+    
+    <header class="app-header">
+        <div class="header-content">
+            <h1><i class="fa-solid fa-network-wired gradient-text"></i> Soket Programlama Simülasyonu</h1>
+            <p>Ağ (Network) çalışma mantığını ve yaşam döngüsünü adımlayarak görselleştirin.</p>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Sunucu Paneli -->
+        <section class="panel glass-panel server-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-server icon-server"></i> Sunucu (Server)</h2>
+                <div class="status-indicator" id="server-status"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="s-btn-1" class="btn btn-server" onclick="serverAction('socket')"><span class="step-num">1</span> socket()</button>
+                <button id="s-btn-2" class="btn btn-server" onclick="serverAction('bind_listen')" disabled><span class="step-num">2</span> bind() & listen()</button>
+                <button id="s-btn-3" class="btn btn-server" onclick="serverAction('accept')" disabled><span class="step-num">3</span> accept()</button>
+                <button id="s-btn-4" class="btn btn-server btn-receive" onclick="serverAction('recv')" disabled><span class="step-num">4</span> recv()</button>
+                <button id="s-btn-5" class="btn btn-server btn-send" onclick="serverAction('send')" disabled><span class="step-num">5</span> send() & close()</button>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header"><i class="fa-solid fa-terminal"></i> Terminal Logları</div>
+                <div id="server-log" class="terminal-body scroller"></div>
+            </div>
+        </section>
+
+        <!-- Orta Ağ Görselleştirme Paneli -->
+        <section class="network-panel">
+            <!-- Bilgi Kartı -->
+            <div class="info-card glass-panel" id="main-info">
+                <div class="info-header">
+                    <h3><i class="fa-solid fa-book-open"></i> Süreç Bilgisi</h3>
+                </div>
+                <div class="info-body">
+                    <p id="info-text">Hoş Geldiniz! Simülasyonu başlatmak için sol taraftaki <span class="highlight">Sunucu (Server)</span> panelinde ilk adım olan <strong>socket()</strong> oluşturma butonuna tıklayın.</p>
+                    <button id="terminal-btn" class="btn btn-terminal" onclick="openTerminal()" style="display: none; margin-top: 15px; width: 100%; justify-content: center; background: rgba(52, 211, 153, 0.1); border-color: var(--accent-success); color: var(--accent-success); transition: opacity 0.5s;">
+                        <i class="fa-solid fa-terminal" style="margin-right: 8px;"></i> Ağ Bağlantılarını Doğrula (Ayrı CMD Penceresi Aç)
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Animasyon Alanı -->
+            <div class="canvas-area">
+                <!-- SUNUCU NODE'U -->
+                <div class="node server-node dimmed" id="node-s">
+                    <div class="radar-rings" id="s-radar">
+                        <div class="ring"></div>
+                        <div class="ring delay"></div>
+                    </div>
+                    <div class="icon-circle server-icon-circle"><i class="fa-solid fa-server"></i></div>
+                    <div class="badge badge-server" id="badge-s">Bağlantı Bekliyor</div>
+                    <div class="port-lock" id="s-port-badge"><i class="fa-solid fa-lock"></i> 127.0.0.1:8080</div>
+                    <span class="node-label" id="s-label"><i class="fa-solid fa-pause"></i> Kapalı</span>
+                </div>
+                
+                <!-- BAĞLANTI TÜNELİ -->
+                <div class="connection-wrapper">
+                    <div class="tunnel" id="connection-tunnel">
+                        <div class="tunnel-flow"></div>
+                    </div>
+                    <!-- Paket dışarıda kalarak kesilmesini (overflow:hidden yüzünden) engeller -->
+                    <div class="packet" id="data-packet" style="opacity: 0;"></div>
+                </div>
+
+                <!-- İSTEMCİ NODE'U -->
+                <div class="node client-node dimmed" id="node-c">
+                    <div class="icon-circle client-icon-circle"><i class="fa-solid fa-laptop"></i></div>
+                    <div class="badge badge-client" id="badge-c">Bekliyor</div>
+                    <span class="node-label" id="c-label"><i class="fa-solid fa-pause"></i> Kapalı</span>
+                </div>
+            </div>
+            
+            <!-- Modal (İstemci HTML Sonu) -->
+            <div id="browser-modal" class="modal glass-panel" style="display: none;">
+                <div class="browser-top">
+                    <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                    <div class="address-bar">127.0.0.1:8080/arayuz_sonuc.html</div>
+                    <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="browser-content" id="browser-content">
+                    <h1>🎉 Tebrikler! Soket Programlama Tamamlandı!</h1>
+                    <p>Bu web sayfası, arka planda byte (bayt) olarak parçalanmış, tünelden geçirilmiş ve HTML olarak tekrar birleştirilmiş bir içeriği temsil etmektedir. Soket yaşam döngüsünü tamamladınız.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- İstemci Paneli -->
+        <section class="panel glass-panel client-panel">
+             <div class="panel-header">
+                <h2><i class="fa-solid fa-laptop-code icon-client"></i> İstemci (Client)</h2>
+                <div class="status-indicator" id="client-status"></div>
+            </div>
+
+            <div class="controls">
+                <button id="c-btn-1" class="btn btn-client" onclick="clientAction('socket')"><span class="step-num">1</span> socket()</button>
+                <button id="c-btn-2" class="btn btn-client" onclick="clientAction('connect')" disabled><span class="step-num">2</span> connect()</button>
+                <button id="c-btn-3" class="btn btn-client btn-send" onclick="clientAction('send')" disabled><span class="step-num">3</span> send() İsteği</button>
+                <button id="c-btn-4" class="btn btn-client btn-receive" onclick="clientAction('recv')" disabled><span class="step-num">4</span> recv()</button>
+                <button id="c-btn-5" class="btn btn-client" onclick="clientAction('close')" disabled><span class="step-num">5</span> close() & Göster</button>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header"><i class="fa-solid fa-terminal"></i> Terminal Logları</div>
+                <div id="client-log" class="terminal-body scroller"></div>
+            </div>
+        </section>
+    </main>
+    
+    <script src="script.js"></script>
+</body>
+</html>
